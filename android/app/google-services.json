@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "429763167968",
+    "project_id": "proutvm-87041",
+    "storage_bucket": "proutvm-87041.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:429763167968:android:0777aad931dffb9068b285",
+        "android_client_info": {
+          "package_name": "com.utvm.proutvm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJvN8J96lzgQ23V8RRdLSnLjistyP9wFQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:429763167968:android:fe1758e3a4b1763e68b285",
+        "android_client_info": {
+          "package_name": "com.utvm.proutvmv2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJvN8J96lzgQ23V8RRdLSnLjistyP9wFQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
