@@ -142,6 +142,24 @@ class _equiposState extends State<equipos> {
 
   @override
   Widget build(BuildContext context) {
+
+
+    // Lista de los meses del año
+    final List<String> meses = [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre',
+    ];
+
     return WillPopScope(
       onWillPop: () async => false, // Evita que el usuario retroceda
       child: Scaffold(
@@ -189,7 +207,120 @@ class _equiposState extends State<equipos> {
                         ),
                       ],
                     ),
+                     SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                     
+                   SizedBox(
+ height: MediaQuery.of(context).size.height * 0.70, // Define una altura específica
+  child: Center(
+    child: ListView(
+      shrinkWrap: true, // Ajusta el ListView al contenido
+      children: [
+        Card(
+  elevation: 4, // Sombra de la tarjeta
+  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+  child: Padding(
+    padding: EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.people, size: 32, color: Colors.blue), // Icono de personas
+            SizedBox(width: 8), // Espacio entre icono y título
+            Text(
+              'Equipo',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 16), // Espacio entre título e indicadores
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Column(
+              children: [
+                Text(
+                  'Miembros',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                Text(
+                  '25', // Número de miembros
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                Text(
+                  'Proyectos',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                Text(
+                  '10', // Número de proyectos
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                Text(
+                  'Tareas',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                Text(
+                  '42', // Número de tareas
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ],
+        ),
+        SizedBox(height: 16), // Espacio entre indicadores y barra
+        // Espacio entre la barra y los botones
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end, // Alinear los botones a la derecha
+          children: [
+            TextButton.icon(
+              onPressed: () {
+                // Acción para editar
+                print('Editar');
+              },
+              icon: Icon(Icons.edit, color: Colors.blue),
+              label: Text('Editar', style: TextStyle(color: Colors.blue)),
+            ),
+            TextButton.icon(
+              onPressed: () {
+                // Acción para eliminar
+                print('Eliminar');
+              },
+              icon: Icon(Icons.delete, color: Colors.red),
+              label: Text('Eliminar', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        ),
+      ],
+    ),
+  ),
+)
+
+
+
+       
+        
+      ],
+    ),
+  ),
+)
+
+
+
+                     
+                    
                     ],
+                    
                    ),
                   ),
                 ),
