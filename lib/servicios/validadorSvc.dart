@@ -1,5 +1,12 @@
+import 'package:proutvm/firebase/equipos.dart';
+
+
 class Validadorsvc {
+
+    final equiposTabla _equiposTabla = equiposTabla();
    
+
+   // Perfil
    
     // Validar nombre 
   String? validarNombre(String? value) {
@@ -52,5 +59,68 @@ class Validadorsvc {
     }
     return null;
   }
+
+ // Equipo
+
+     // Validar nombre 
+  String? validarNombreEquipo(String? value) {
+    // Verifica si es nulo
+    if (value == null || value.isEmpty) {
+      return 'El nombre es obligatorio';
+    }
+    // Que tenga más de cuatro caracteres
+    if (value.length < 4) {
+      return 'Debe tener 4 caracteres mínimo';
+    }
+   
+    return null;
+  }
+
+
+String? validarComboParrafo(String? value, int? max) {
+  // Verifica si el valor es nulo o está vacío
+  if (value == null || value.isEmpty) {
+    return 'El campo es obligatorio';
+  }
+
+  // Verifica si el valor tiene menos caracteres que el máximo permitido
+  if (max != null && value.length < max) {
+    return 'Debe tener al menos $max caracteres';
+  }
+  
+  return null; // Retorna null si no hay errores
+}
+
+// Validar si el código de equipo es válido
+String? validarCodigoEquipo(String? value)  {
+  if (value == null || value.isEmpty) {
+    return 'El código de equipo es obligatorio';
+  }
+  if (value.length != 6) {
+    return 'El código de equipo debe tener 6 caracteres';
+  }
+  
+ /*  // Verificar la existencia en Firebase
+  final existeEnFirebase = await _equiposTabla.verificarExistenciaEquipo(value);
+  if (!existeEnFirebase) {
+    return 'El código de equipo no existe en el sistema';
+  } */
+  
+  return null; 
+}
+
+// Validar si el código de equipo es válido
+Future<bool> validarCodigoEquipoAs(String? codigo) async {
+  if (codigo == null) {
+    // Manejar el caso en el que el código es nulo
+    return false;
+  }
+
+  final existeEnFirebase = await _equiposTabla.verificarExistenciaEquipo(codigo);
+  return existeEnFirebase;
+}
+
+
+
 
 }

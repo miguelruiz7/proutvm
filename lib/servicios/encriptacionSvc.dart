@@ -31,5 +31,7 @@ class EncriptacionSvc {
     final decrypter = Encrypter(RSA(privateKey: _rsaPrivateKey!));
     return decrypter.decrypt64(cadenaEncriptada);
   }
+
+  
 }
 

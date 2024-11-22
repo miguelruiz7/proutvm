@@ -113,7 +113,7 @@ class _principalPagState extends State<principalPag> {
                 NavigationRailDestination(
                   icon: Icon(Icons.person),
                   selectedIcon: Icon(Icons.person),
-                  label: Text('Perfil'),
+                  label: Text('Config.'),
                 ),
                 NavigationRailDestination(
                   icon: Icon(Icons.group),
