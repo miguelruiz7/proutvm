@@ -157,7 +157,7 @@ Future<void> _login() async {
                           ),
                           SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                           SizedBox(
-   width: MediaQuery.of(context).size.width * 0.85,
+   width: MediaQuery.of(context).size.width * 0.65,
   
   child: ElevatedButton.icon(
     onPressed: () async {

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:proutvm/vistas/proyectos.dart';
 import 'package:proutvm/vistas/equipos.dart';
 import 'package:proutvm/vistas/perfil.dart';
-import 'package:proutvm/vistas/acceso.dart'; // Asegúrate de importar la página de acceso
+import 'package:proutvm/vistas/acceso.dart'; 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'controladores/autenticacionCtrl.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Inicializamos firebase para cualquier plataforma
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -84,7 +85,4 @@ class _MyAppState extends State<MyApp> {
   Widget _buildLoadingScreen() {
     return Center(child: CircularProgressIndicator()); 
   }
-
-
-  
 }

@@ -1,38 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:proutvm/firebase/proyectos.dart';
+import 'package:proutvm/firebase/tareas.dart';
 import 'package:proutvm/servicios/validadorSvc.dart';
-import 'package:proutvm/modelos/proyecto.dart';
-import 'package:proutvm/vistas/tareas.dart';
+import 'package:proutvm/modelos/tarea.dart';
 
-class proyectos extends StatefulWidget {
+class tareasProceso extends StatefulWidget {
   final String proId;
 
-  proyectos({required this.proId});
+  tareasProceso({required this.proId});
 
   @override
-  _proyectosState createState() => _proyectosState();
+  _tareasProcesoState createState() => _tareasProcesoState();
 }
-/*   
-  const proyectos({super.key}); */
 
-class _proyectosState extends State<proyectos> {
-  final proyectosTabla _proyectosTabla = proyectosTabla();
+class _tareasProcesoState extends State<tareasProceso> {
+  final tareasTabla _tareasTabla = tareasTabla();
 
   // Variables del formulario
   final TextEditingController _nombre = TextEditingController();
   final TextEditingController _descripcion = TextEditingController();
   final TextEditingController _fechaInicio = TextEditingController();
   final TextEditingController _fechaFinalizacion = TextEditingController();
-  final TextEditingController _creacion = TextEditingController();
 
-  final GlobalKey<FormState> _formularioProyectos = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formularioTareas = GlobalKey<FormState>();
 
   @override
   void dispose() {
     super.dispose();
   }
 
-  void _mdlagregarProyecto() {
+  void _mdlagregarTarea() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -45,7 +41,7 @@ class _proyectosState extends State<proyectos> {
           alignment: Alignment.center,
           child: SingleChildScrollView(
             child: Form(
-              key: _formularioProyectos,
+              key: _formularioTareas,
               child: Column(
                 children: [
                   Row(
@@ -54,7 +50,7 @@ class _proyectosState extends State<proyectos> {
                       // Ícono a la izquierda
                       SizedBox(width: 4), // Espacio entre el ícono y el texto
                       Text(
-                        'Agregar proyecto',
+                        'Agregar tarea',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           color: Colors.black,
@@ -67,15 +63,16 @@ class _proyectosState extends State<proyectos> {
                     ],
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                  Text('Inicia con algo nuevo, ten en mente tu idea'),
+                  Text(
+                      'Aquí crearás todo tu proceso para llevar a cabo el tarea'),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.85,
                     child: TextFormField(
                         controller: _nombre,
                         decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.lightbulb_circle),
-                          labelText: 'Nombre del proyecto',
+                          prefixIcon: Icon(Icons.library_books),
+                          labelText: 'Nombre del tarea',
                           filled: true,
                           fillColor: const Color.fromARGB(255, 231, 231, 231),
                         ),
@@ -154,7 +151,7 @@ class _proyectosState extends State<proyectos> {
                             filled: true,
                             fillColor: const Color.fromARGB(255, 231, 231, 231),
                           ),
-                         /*  validator: (value) =>
+                          /*  validator: (value) =>
                               Validadorsvc().validarComboParrafo(value, 20), */
                         ),
                       ),
@@ -171,7 +168,7 @@ class _proyectosState extends State<proyectos> {
             onPressed: () {
               Navigator.pop(context);
               /* _formKey.currentState!.reset(); */
-              _formularioProyectos.currentState!.reset();
+              _formularioTareas.currentState!.reset();
               reseteaFormulario(); // Llamar al método de reseteo del formulario
             }, // Cerrar el diálogo
             child: Row(
@@ -186,7 +183,7 @@ class _proyectosState extends State<proyectos> {
           ),
           TextButton(
             onPressed: () async {
-             await  agregarProyecto();  // Llamar al método de eliminación
+              await agregarTarea(); // Llamar al método de eliminación
             },
             child: Row(
               mainAxisSize: MainAxisSize.min, // Ajustar al contenido
@@ -204,28 +201,27 @@ class _proyectosState extends State<proyectos> {
     );
   }
 
-  //Agregar proyecto
-  Future<void> agregarProyecto() async {
+  //Agregar tarea
+  Future<void> agregarTarea() async {
     // Validar el formulario
-    if (_formularioProyectos.currentState!.validate()) {
-     Proyecto nuevoProyecto = Proyecto(
-  nombre: _nombre.text,
-  descripcion: _descripcion.text,
-  creacion: DateTime.parse(_fechaInicio.text), // Convierte el texto a DateTime
-  fechaInicio: DateTime.parse(_fechaInicio.text), // Convierte el texto a DateTime
-  fechaFinalizacion: DateTime.parse(_fechaFinalizacion.text), // Convierte el texto a DateTime
-);
-         
+    if (_formularioTareas.currentState!.validate()) {
+      Tarea nuevaTarea = Tarea(
+        nombre: _nombre.text,
+        descripcion: _descripcion.text,
+        fechaInicio:
+            DateTime.parse(_fechaInicio.text), // Convierte el texto a DateTime
+        fechaFinalizacion: DateTime.parse(
+            _fechaFinalizacion.text), // Convierte el texto a DateTime
+      );
 
-      await _proyectosTabla.crearProyecto(context, nuevoProyecto, widget.proId);
-
+      await _tareasTabla.crearTarea(context, nuevaTarea, widget.proId);
       Navigator.pop(context); // Cerrar el diálogo
       reseteaFormulario(); // Llamar al método de reseteo del formulario
     }
   }
 
-   void _mdlinfoproyecto(String proyecto) async {
-    Proyecto? proyecto_ = await _proyectosTabla.verProyecto(proyecto, widget.proId);
+  void _mdlinfotarea(String tarea) async {
+    Tarea? tarea_ = await _tareasTabla.verTarea(widget.proId, tarea);
 
     showDialog(
       context: context,
@@ -240,7 +236,7 @@ class _proyectosState extends State<proyectos> {
           alignment: Alignment.center,
           child: SingleChildScrollView(
             child: Form(
-              key: _formularioProyectos,
+              key: _formularioTareas,
               child: Column(
                 children: [
                   Row(
@@ -262,43 +258,39 @@ class _proyectosState extends State<proyectos> {
                     ],
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                  Text('Id: ' + proyecto),
+                  Text('Id: ' + tarea),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   ListTile(
                     leading: Icon(Icons.lightbulb_circle, color: Colors.blue),
-                    title: Text('Nombre del proyecto'),
+                    title: Text('Nombre del tarea'),
                     subtitle: Text(
-                      proyecto_?.nombre ?? 'Cargando...',
+                      tarea_?.nombre ?? 'Cargando...',
                     ),
                   ),
-                 
-                 
                   Divider(),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   ListTile(
                     leading: Icon(Icons.padding_sharp, color: Colors.blue),
-                    title: Text('Descripción del proyecto'),
+                    title: Text('Descripción del tarea'),
                     subtitle: Text(
-                      proyecto_?.descripcion ?? 'Cargando...',
-                    ),
-                  ),
-                   Divider(),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                  ListTile(
-                    leading: Icon(Icons.calendar_month, color: Colors.blue),
-                    title: Text('Inicio del proyecto'),
-                    subtitle: Text(
-                     proyecto_?.fechaInicio?.toString() ?? 'Cargando...'
-
+                      tarea_?.descripcion ?? 'Cargando...',
                     ),
                   ),
                   Divider(),
-                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   ListTile(
                     leading: Icon(Icons.calendar_month, color: Colors.blue),
-                    title: Text('Fin del proyecto'),
+                    title: Text('Inicio del tarea'),
+                    subtitle:
+                        Text(tarea_?.fechaInicio?.toString() ?? 'Cargando...'),
+                  ),
+                  Divider(),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                  ListTile(
+                    leading: Icon(Icons.calendar_month, color: Colors.blue),
+                    title: Text('Fin del tarea'),
                     subtitle: Text(
-                      proyecto_?.fechaFinalizacion?.toString() ?? 'Cargando...',
+                      tarea_?.fechaFinalizacion?.toString() ?? 'Cargando...',
                     ),
                   ),
                   Divider(),
@@ -330,7 +322,7 @@ class _proyectosState extends State<proyectos> {
   }
 
   //Modal para eliminar equipo
-  void _mdleliminarProyecto(String proyecto) {
+  void _mdleliminarTarea(String tarea) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -343,7 +335,7 @@ class _proyectosState extends State<proyectos> {
           alignment: Alignment.center,
           child: SingleChildScrollView(
             child: Form(
-              key: _formularioProyectos,
+              key: _formularioTareas,
               child: Column(
                 children: [
                   Row(
@@ -352,7 +344,7 @@ class _proyectosState extends State<proyectos> {
                       // Ícono a la izquierda
                       SizedBox(width: 4), // Espacio entre el ícono y el texto
                       Text(
-                        'Eliminar proyecto',
+                        'Eliminar tarea',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           color: Colors.black,
@@ -368,7 +360,7 @@ class _proyectosState extends State<proyectos> {
                   Text(
                       'Al eliminar al equipo, perderan los progresos, proyectos ¿Desea continuar?'),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                  Text('Id: ' + proyecto),
+                  Text('Id: ' + tarea),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 ],
               ),
@@ -394,7 +386,7 @@ class _proyectosState extends State<proyectos> {
           ),
           TextButton(
             onPressed: () {
-              eliminarProyecto(proyecto);
+              eliminarTarea(tarea);
             },
             child: Row(
               mainAxisSize: MainAxisSize.min, // Ajustar al contenido
@@ -412,38 +404,39 @@ class _proyectosState extends State<proyectos> {
     );
   }
 
-
 // Eliminar equipo
-  Future<void> eliminarProyecto(String proyecto_) async {
+  Future<void> eliminarTarea(String tarea_) async {
     try {
       // Eliminar el usuario en Firestore
-      await _proyectosTabla.eliminarProyecto(proyecto_, widget.proId);
+      await _tareasTabla.eliminarTarea(widget.proId, tarea_);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Proyecto eliminado con éxito')),
+        SnackBar(content: Text('Tarea eliminada con éxito')),
       );
       Navigator.pop(context); // Cerrar el diálogo
       reseteaFormulario(); // Llamar al método de reseteo del formulario
     } catch (e) {
       // Manejo de errores durante la eliminación
-      print('Error al eliminar el equipo: $e');
+      print('Error al eliminar la tarea: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al eliminar el equipo: $e')),
+        SnackBar(content: Text('Error al eliminar la tarea: $e')),
       );
     }
   }
 
-   Future<void> _cargarDatosProyecto(String proyecto_) async {
+
+  Future<void> _cargarDatosTarea(String tarea_) async {
     // Leer usuario específico usando el userId
-    Proyecto? proyecto = await _proyectosTabla.verProyecto(proyecto_, widget.proId);
-    if (proyecto != null) {
+    Tarea? tarea = await _tareasTabla.verTarea( widget.proId, tarea_);
+    if (tarea != null) {
       try {
         // Actualizar los controles de texto con los valores desencriptados
         setState(() {
-          _nombre.text = proyecto.nombre;
-          _descripcion.text = proyecto.descripcion;
-          _fechaInicio.text = proyecto.fechaInicio?.toString()?? '';
-          _fechaFinalizacion.text = proyecto.fechaFinalizacion?.toString()?? '';
-          _mdlmodificarProyecto(proyecto_);
+          _nombre.text = tarea.nombre;
+          _descripcion.text = tarea.descripcion;
+          _fechaInicio.text = tarea.fechaInicio?.toString()?? '';
+          _fechaFinalizacion.text = tarea.fechaFinalizacion?.toString()?? '';
+           _mdlmodificarTarea(tarea_);
+  
         });
       } catch (e) {
         // Manejo de errores durante la desencriptación
@@ -460,7 +453,7 @@ class _proyectosState extends State<proyectos> {
     }
   }
 
-void _mdlmodificarProyecto(proyecto) {
+void _mdlmodificarTarea(tarea) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -473,7 +466,7 @@ void _mdlmodificarProyecto(proyecto) {
           alignment: Alignment.center,
           child: SingleChildScrollView(
             child: Form(
-              key: _formularioProyectos,
+              key: _formularioTareas,
               child: Column(
                 children: [
                   Row(
@@ -482,7 +475,7 @@ void _mdlmodificarProyecto(proyecto) {
                       // Ícono a la izquierda
                       SizedBox(width: 4), // Espacio entre el ícono y el texto
                       Text(
-                        'Modificar proyecto',
+                        'Modificar tarea',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           color: Colors.black,
@@ -494,8 +487,8 @@ void _mdlmodificarProyecto(proyecto) {
                       ),
                     ],
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                  Text('Inicia con algo nuevo, ten en mente tu idea'),
+               
+                 
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.85,
@@ -503,7 +496,7 @@ void _mdlmodificarProyecto(proyecto) {
                         controller: _nombre,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.lightbulb_circle),
-                          labelText: 'Nombre del proyecto',
+                          labelText: 'Nombre de la tarea',
                           filled: true,
                           fillColor: const Color.fromARGB(255, 231, 231, 231),
                         ),
@@ -599,7 +592,7 @@ void _mdlmodificarProyecto(proyecto) {
             onPressed: () {
               Navigator.pop(context);
               /* _formKey.currentState!.reset(); */
-              _formularioProyectos.currentState!.reset();
+              _formularioTareas.currentState!.reset();
               reseteaFormulario(); // Llamar al método de reseteo del formulario
             }, // Cerrar el diálogo
             child: Row(
@@ -614,7 +607,7 @@ void _mdlmodificarProyecto(proyecto) {
           ),
           TextButton(
             onPressed: () async {
-             await  _modificarProyecto(proyecto);  // Llamar al método de eliminación
+             await  _modificarTarea(tarea);  // Llamar al método de eliminación
             },
             child: Row(
               mainAxisSize: MainAxisSize.min, // Ajustar al contenido
@@ -632,20 +625,20 @@ void _mdlmodificarProyecto(proyecto) {
     );
   }
 
-  // Modificar equipo
-  Future<void> _modificarProyecto(String proyecto_) async {
-    if (_formularioProyectos.currentState!.validate()) {
+    // Modificar equipo
+  Future<void> _modificarTarea(String tarea_) async {
+    if (_formularioTareas.currentState!.validate()) {
       // Cargar la clave pública para cifrar los datos
       try {
         // Crear un objeto usuario con los datos cifrados
-        Proyecto proyecto = Proyecto(
+        Tarea tarea = Tarea(
             nombre: _nombre.text,
             descripcion: _descripcion.text,
             fechaInicio: DateTime.parse(_fechaInicio.text),
             fechaFinalizacion: DateTime.parse(_fechaFinalizacion.text),
         );
         // Actualizar el usuario en Firestore
-        await _proyectosTabla.actualizarProyecto(proyecto, widget.proId, proyecto_);
+        await _tareasTabla.actualizarTarea(widget.proId, tarea, tarea_);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Datos actualizados con éxito')),
         );
@@ -662,22 +655,20 @@ void _mdlmodificarProyecto(proyecto) {
     }
   }
 
+
   Future<void> reseteaFormulario() async {
     _nombre.clear();
     _descripcion.clear();
     _fechaInicio.clear();
     _fechaFinalizacion.clear();
-    _creacion.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Ejemplo de lista de proyectos
-
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Mis proyectos',
+            'Mis tareas',
             style: TextStyle(
               color: Colors.black,
               fontSize: 30,
@@ -689,10 +680,16 @@ void _mdlmodificarProyecto(proyecto) {
             IconButton(
               icon: Icon(Icons.add_circle_outline_sharp),
               onPressed: () {
-                _mdlagregarProyecto();
+                _mdlagregarTarea();
               },
             ),
           ],
+           leading: IconButton(
+    icon: Icon(Icons.arrow_back),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  ),
         ),
         body: SafeArea(
             child: Padding(
@@ -701,38 +698,38 @@ void _mdlmodificarProyecto(proyecto) {
             // Hacemos el contenido desplazable
             child: Column(
               children: [
-                StreamBuilder<List<Proyecto>>(
-                  /*  future: listarproyectos(), */
-                  stream: _proyectosTabla
-                      .verProyectos_(widget.proId), // Escucha el stream
+                StreamBuilder<List<Tarea>>(
+                  /*  future: listartareas(), */
+                  stream:
+                      _tareasTabla.verTareasEnProceso(widget.proId), // Escucha el stream
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(child: Text('No tienes proyectos.'));
+                      return Center(child: Text('No tienes tareas.'));
                     } else {
-                      var proyectosList = snapshot.data!;
+                      var tareasList = snapshot.data!;
                       return ListView.builder(
                         shrinkWrap:
                             true, // Para evitar que ocupe todo el espacio
                         physics:
                             NeverScrollableScrollPhysics(), // Evita el desplazamiento dentro del ListView
-                        itemCount: proyectosList.length,
+                        itemCount: tareasList.length,
                         itemBuilder: (context, index) {
-                          var proyecto = proyectosList[index];
+                          var tarea = tareasList[index];
                           return InkWell(
                             onTap: () {
                               // Acción al hacer clic en la tarjeta
-                              print('Tarjeta clickeada: ${proyecto.id}');
+                              print('Tarjeta clickeada: ${tarea.id}');
                               // Ejemplo: Navegar a otra página
-                              // Navigator.push(context, MaterialPageRoute(builder: (context) => DetalleproyectoPage(proyecto: proyecto)));
-                               Navigator.push(
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) => DetalletareaPage(tarea: tarea)));
+                              /* Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          tareas(proId: proyecto.id!)));
+                                          tareas(proId: tarea.id!))); */
                             },
                             child: Card(
                               elevation: 4,
@@ -749,7 +746,7 @@ void _mdlmodificarProyecto(proyecto) {
                                             size: 32, color: Colors.blue),
                                         SizedBox(width: 8),
                                         Text(
-                                          proyecto.nombre,
+                                          tarea.nombre,
                                           style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold),
@@ -768,7 +765,7 @@ void _mdlmodificarProyecto(proyecto) {
                                                     fontSize: 14,
                                                     color: Colors.grey)),
                                             Text("?",
-                                                /*   proyecto.miembros!.length
+                                                /*   tarea.miembros!.length
                                                         .toString(), */
                                                 style: TextStyle(
                                                     fontSize: 16,
@@ -785,8 +782,8 @@ void _mdlmodificarProyecto(proyecto) {
                                         TextButton.icon(
                                           onPressed: () {
                                             // Acción para eliminar
-                                            print('Información de proyecto');                       
-                                            _mdlinfoproyecto(proyecto.id!);
+                                            print('Información de tarea');
+                                            _mdlinfotarea(tarea.id!);
                                           },
                                           icon: Icon(Icons.info_outline,
                                               color: Colors.blue),
@@ -798,8 +795,7 @@ void _mdlmodificarProyecto(proyecto) {
                                           onPressed: () {
                                             // Acción para editar
                                             print('Editar');
-                                             _cargarDatosProyecto(proyecto.id!);
-
+                                             _cargarDatosTarea(tarea.id!);
                                           },
                                           icon: Icon(Icons.edit,
                                               color: Colors.blue),
@@ -811,8 +807,8 @@ void _mdlmodificarProyecto(proyecto) {
                                           onPressed: () {
                                             // Acción para eliminar
                                             print('Eliminar');
-                                            /*  _mdleliminarproyecto(proyecto.id!); */
-                                            _mdleliminarProyecto(proyecto.id!);
+
+                                            _mdleliminarTarea(tarea.id!);
                                           },
                                           icon: Icon(Icons.delete,
                                               color: Colors.red),

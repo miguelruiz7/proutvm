@@ -1,32 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:proutvm/modelos/proyecto.dart';
-
 import 'package:flutter/material.dart';
 
 
 class proyectosTabla {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-/* Stream<List<Proyecto>> verProyectos_(String equipo) async* {
-  try {
-    final query = _firestore
-        .collection('equipos')
-        .doc(equipo)
-        .collection('proyectos');
-
-    yield* query.snapshots().map((snapshot) =>
-        snapshot.docs.map((doc) {
-          // Obtener los datos del documento usando .data() y hacer el cast correcto
-          var data = doc.data() as Map<String, dynamic>;
-          return Proyecto.fromFirestore(data, doc.id);
-        }).toList());
-  } catch (e) {
-    print('Error al obtener proyectos del equipo $equipo: $e');
-    // Puedes lanzar un error más específico si lo deseas, por ejemplo:
-    // throw FirebaseException(message: 'Error al obtener proyectos', code: 'PROJECT_NOT_FOUND');
-    rethrow;
-  }
-} */
 
 Stream<List<Proyecto>> verProyectos_(String equipo) {
   return _firestore.collection('equipos')
@@ -97,6 +75,25 @@ Future<void> crearProyecto(BuildContext context, Proyecto proyecto, String equip
        .doc(identificadorProyecto)
        .delete();
   }
+
+
+// Actualizar un proyecto
+Future<void> actualizarProyecto(Proyecto proyecto, String identificadorEquipo, String identificadorProyecto) async {
+  try {
+    // Acceder al documento específico y actualizar sus datos
+    await _firestore
+        .collection('equipos')
+        .doc(identificadorEquipo)
+        .collection('proyectos')
+        .doc(identificadorProyecto)
+        .update(proyecto.toMap()); // Convierte el objeto Proyecto a un mapa
+    print('Proyecto actualizado correctamente.');
+  } catch (e) {
+    print('Error al actualizar el proyecto: $e');
+    throw Exception('No se pudo actualizar el proyecto. Inténtalo de nuevo.');
+  }
+}
+
 
 
 }
