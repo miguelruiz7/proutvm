@@ -656,6 +656,107 @@ void _mdlmodificarTarea(tarea) {
   }
 
 
+    void _mdlcompletarTarea(String tarea) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Container(
+          decoration: BoxDecoration(
+            /* color: Colors.white, */
+            borderRadius: BorderRadius.vertical(top: Radius.circular(0)),
+          ),
+          height: MediaQuery.of(context).size.height * 0.15,
+          alignment: Alignment.center,
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formularioTareas,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // Ícono a la izquierda
+                      SizedBox(width: 4), // Espacio entre el ícono y el texto
+                      Text(
+                        'Completar tarea',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 30,
+                          fontFamily: 'Mulish',
+                          fontWeight: FontWeight.w600,
+                          height: 0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                  Text(
+                      '¿Estas seguro que deseas darlo por completo?'),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                  Text('Id: ' + tarea),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                ],
+              ),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              /* _formKey.currentState!.reset(); */
+              reseteaFormulario(); // Llamar al método de reseteo del formulario
+            }, // Cerrar el diálogo
+            child: Row(
+              mainAxisSize: MainAxisSize.min, // Ajustar al contenido
+              children: [
+                Icon(Icons.cancel, color: Colors.red), // Icono de cancelar
+                SizedBox(width: 8), // Espacio entre el icono y el texto
+                Text('Cancelar',
+                    style: TextStyle(color: Colors.red, fontSize: 18)),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              completarTarea(tarea);
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min, // Ajustar al contenido
+              children: [
+                Icon(Icons.check_circle,
+                    color: Colors.green[800]), // Icono de continuar
+                SizedBox(width: 8), // Espacio entre el icono y el texto
+                Text('Continuar',
+                    style: TextStyle(color: Colors.green[800], fontSize: 18)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+Future<void> completarTarea(String tarea_) async {
+    try {
+      // Eliminar el usuario en Firestore
+      await _tareasTabla.completarTarea(widget.proId, tarea_);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Tarea completada con éxito')),
+      );
+      Navigator.pop(context); // Cerrar el diálogo
+      reseteaFormulario(); // Llamar al método de reseteo del formulario
+    } catch (e) {
+      // Manejo de errores durante la eliminación
+      print('Error al completar la tarea: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al completar la tarea: $e')),
+      );
+    }
+  }
+
   Future<void> reseteaFormulario() async {
     _nombre.clear();
     _descripcion.clear();
@@ -731,97 +832,80 @@ void _mdlmodificarTarea(tarea) {
                                       builder: (context) =>
                                           tareas(proId: tarea.id!))); */
                             },
-                            child: Card(
-                              elevation: 4,
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 16),
-                              child: Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(Icons.lightbulb_circle,
-                                            size: 32, color: Colors.blue),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          tarea.nombre,
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 16),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            /* Text('Miembros',
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.grey)),
-                                            Text("?",
-                                                /*   tarea.miembros!.length
-                                                        .toString(), */
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.bold)), */
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 16),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        TextButton.icon(
-                                          onPressed: () {
-                                            // Acción para eliminar
-                                            print('Información de tarea');
-                                            _mdlinfotarea(tarea.id!);
-                                          },
-                                          icon: Icon(Icons.info_outline,
-                                              color: Colors.blue),
-                                          label: Text('Info',
-                                              style: TextStyle(
-                                                  color: Colors.blue)),
-                                        ),
-                                        TextButton.icon(
-                                          onPressed: () {
-                                            // Acción para editar
-                                            print('Editar');
-                                             _cargarDatosTarea(tarea.id!);
-                                          },
-                                          icon: Icon(Icons.edit,
-                                              color: Colors.blue),
-                                          label: Text('Editar',
-                                              style: TextStyle(
-                                                  color: Colors.blue)),
-                                        ),
-                                        TextButton.icon(
-                                          onPressed: () {
-                                            // Acción para eliminar
-                                            print('Eliminar');
+                           child: Card(
+  elevation: 4,
+  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+  child: Padding(
+    padding: EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.lightbulb_circle, size: 32, color: Colors.blue),
+            SizedBox(width: 8),
+            Text(
+              tarea.nombre,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            // Espacio para información adicional
+          ],
+        ),
+        SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton.icon(
+              onPressed: () {
+                print('Información de tarea');
+                _mdlinfotarea(tarea.id!);
+              },
+              icon: Icon(Icons.info_outline, color: Colors.blue),
+              label: Text('Info', style: TextStyle(color: Colors.blue)),
+            ),
+            TextButton.icon(
+              onPressed: () {
+                print('Editar');
+                _cargarDatosTarea(tarea.id!);
+              },
+              icon: Icon(Icons.edit, color: Colors.blue),
+              label: Text('Editar', style: TextStyle(color: Colors.blue)),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton.icon(
+              onPressed: () {
+                print('Eliminar');
+                _mdleliminarTarea(tarea.id!);
+              },
+              icon: Icon(Icons.delete, color: Colors.red),
+              label: Text('Eliminar', style: TextStyle(color: Colors.red)),
+            ),
+            TextButton.icon(
+              onPressed: () {
+                print('Completar tarea');
+                /* _completarTarea(tarea.id!); */
+                _mdlcompletarTarea(tarea.id!);
+              },
+              icon: Icon(Icons.check_circle, color: Colors.green),
+              label: Text('Completar', style: TextStyle(color: Colors.green)),
+            ),
+          ],
+        ),
+      ],
+    ),
+  ),
+),
 
-                                            _mdleliminarTarea(tarea.id!);
-                                          },
-                                          icon: Icon(Icons.delete,
-                                              color: Colors.red),
-                                          label: Text('Eliminar',
-                                              style:
-                                                  TextStyle(color: Colors.red)),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
                           );
                         },
                       );

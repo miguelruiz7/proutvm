@@ -140,4 +140,38 @@ Stream<List<Tarea>> verTareasEnProceso(String uuidProyecto) {
       print('Error al actualizar la tarea: $e');
     }
   }
+
+
+    // Marcar tarea como completa
+  Future<void> completarTarea(String uuidProyecto, String tareaId) async {
+    try {
+      await _firestore
+          .collection('tareas')
+          .doc(uuidProyecto)
+          .collection('tareas')
+          .doc(tareaId)
+          .update({'completado': 1}); // Cambiar el estado a completado
+      print('Tarea marcada como completa.');
+    } catch (e) {
+      print('Error al marcar la tarea como completa: $e');
+      throw Exception('No se pudo marcar la tarea como completa. Inténtalo de nuevo.');
+    }
+  }
+
+  // Revertir tarea completada
+  Future<void> revertirTarea(String uuidProyecto, String tareaId) async {
+    try {
+      await _firestore
+          .collection('tareas')
+          .doc(uuidProyecto)
+          .collection('tareas')
+          .doc(tareaId)
+          .update({'completado': 0}); // Cambiar el estado a no completado
+      print('Estado de la tarea revertido a en proceso.');
+    } catch (e) {
+      print('Error al revertir la tarea: $e');
+      throw Exception('No se pudo revertir la tarea. Inténtalo de nuevo.');
+    }
+  }
+
 }
