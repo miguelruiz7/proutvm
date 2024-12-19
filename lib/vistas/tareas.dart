@@ -15,14 +15,10 @@ class _tareasState extends State<tareas> {
   int _selectedIndex = 0;
    
  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Gestor de Tareas',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: _tareasPantallas()  
+
+ Widget build(BuildContext context) {
+    return Scaffold(      
+       body: _tareasPantallas(),
     );
   }
 
