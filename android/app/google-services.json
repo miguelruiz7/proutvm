@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "429763167968",
     "project_id": "proutvm-87041",
-    "storage_bucket": "proutvm-87041.appspot.com"
+    "storage_bucket": "proutvm-87041.firebasestorage.app"
   },
   "client": [
     {
@@ -12,7 +12,20 @@
           "package_name": "com.utvm.proutvm"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "429763167968-u295n0vefdnpj9dnoagrhcoam3pfq3j3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.utvm.proutvm",
+            "certificate_hash": "83ee2128bc9ca36673953a1aa8a487d735edfa27"
+          }
+        },
+        {
+          "client_id": "429763167968-9dhiilqmuect5aibu7ul2k1ku3u1to6g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDJvN8J96lzgQ23V8RRdLSnLjistyP9wFQ"
@@ -20,26 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:429763167968:android:fe1758e3a4b1763e68b285",
-        "android_client_info": {
-          "package_name": "com.utvm.proutvmv2"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDJvN8J96lzgQ23V8RRdLSnLjistyP9wFQ"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "429763167968-9dhiilqmuect5aibu7ul2k1ku3u1to6g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

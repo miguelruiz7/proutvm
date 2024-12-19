@@ -105,19 +105,65 @@ Stream<List<Equipo>> verEquipos_(String userId) {
 
 
 
-Future<bool> verificarExistenciaEquipo(String codigoEquipo) async {
-  try {
-    final querySnapshot = await _firestore
-        .collection('equipos')
-        .where('codigo', whereIn: [codigoEquipo] )
-        .get();
+/* Future<void> verificarExistenciaEquipo(String codigoEquipo) async {
+  
 
-    return querySnapshot.docs.isNotEmpty;
-  } catch (e) {
-    print('Error al verificar el código de equipo: $e');
-    // Mostrar un mensaje de error más específico al usuario
+} */
+
+
+Future<bool> verificarExistenciaEquipo(String codigoEquipo) async {
+  // Referencia a la colección 'equipos'
+  var equiposCollection = FirebaseFirestore.instance.collection('equipos');
+
+  // Realizar consulta para verificar si el código de equipo existe
+  var snapshot = await equiposCollection.where('codigo', isEqualTo: codigoEquipo).get();
+
+  if (snapshot.docs.isNotEmpty) {
+    // Si el documento existe, imprimir que existe
+    print('El equipo con código $codigoEquipo existe.');
+    return true;
+  } else {
+    // Si el documento no existe
+    print('El equipo con código $codigoEquipo no existe.');
     return false;
   }
 }
+
+
+Future<void> unirseAEquipo(String codigoEquipo, String identificadorUsuario, BuildContext context) async {
+  try {
+    // Buscar el equipo por su código
+    final snapshot = await _firestore
+        .collection('equipos')
+        .where('codigo', isEqualTo: codigoEquipo)
+        .limit(1) // Solo necesitamos un equipo
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      // Obtener la referencia al documento del equipo
+      final equipoDoc = snapshot.docs.first;
+      final equipoId = equipoDoc.id;
+
+         Map<String, int> nuevoRol = {identificadorUsuario: 1};
+
+    // Agregar el nuevo rol al array de roles
+    await _firestore.collection('equipos').doc(equipoId).update({
+      'miembros': FieldValue.arrayUnion([identificadorUsuario]), // Agregar el usuario al array de miembros
+      'roles': FieldValue.arrayUnion([nuevoRol]), // Agregar el rol del usuario al array de roles
+    });
+
+   
+      print('Usuario $identificadorUsuario unido al equipo $codigoEquipo.');
+    } else {
+    
+      print('El equipo con código $codigoEquipo no existe.');
+    }
+  } catch (e) {
+    // Manejo de errores
+    print('Error al unirse al equipo: $e');
+
+  }
+}
+
 
 }

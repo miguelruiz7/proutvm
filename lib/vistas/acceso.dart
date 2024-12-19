@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:proutvm/controladores/autenticacionCtrl.dart';
+import 'package:proutvm/main.dart';
+import 'package:proutvm/servicios/encriptacionSvc.dart';
 import 'package:proutvm/servicios/validadorSvc.dart';
 import 'package:proutvm/vistas/registro.dart';
-import 'package:proutvm/vistas/principal.dart';
+import 'package:proutvm/modelos/usuario.dart';
+import 'package:proutvm/firebase/usuarios.dart';
+
+
 
 class accesoPagina extends StatefulWidget {
   const accesoPagina({super.key});
@@ -14,6 +19,7 @@ class accesoPagina extends StatefulWidget {
 class _accesoPaginaState extends State<accesoPagina> {
 
   final autenticacionCtrl _autenticacionCtrl = autenticacionCtrl();
+    final usuariosTabla _usuariosTabla = usuariosTabla();
 
   // Controladores de texto
   final TextEditingController _correoCmb = TextEditingController();
@@ -40,7 +46,7 @@ Future<void> _login() async {
     if (user != null) {
       // Successful login, navigate to main screen
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => principalPag()));
+          context, MaterialPageRoute(builder: (context) => MyApp()));
     } else {
       setState(() {
         _isLoading = false;
@@ -92,7 +98,7 @@ Future<void> _login() async {
                           ),
                           SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                           SizedBox(
-                            width: 280,
+                            width: MediaQuery.of(context).size.width * 0.75,
                             child: TextFormField(
                               controller: _correoCmb,
                               decoration: InputDecoration(
@@ -107,7 +113,7 @@ Future<void> _login() async {
                           ),
                           SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                           SizedBox(
-                            width: 280,
+                            width: MediaQuery.of(context).size.width * 0.75,
                             child: TextFormField(
                               validator: Validadorsvc().validarContrasena,
                               controller: _contrasenaCmb,
@@ -150,6 +156,57 @@ Future<void> _login() async {
                             ),
                           ),
                           SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                          SizedBox(
+   width: MediaQuery.of(context).size.width * 0.85,
+  
+  child: ElevatedButton.icon(
+    onPressed: () async {
+      final user = await _autenticacionCtrl.signInWithGoogle();
+      if (user != null) {
+        // Navega a la pantalla principal
+        Navigator.pushReplacement(
+          context, 
+          MaterialPageRoute(builder: (context) => MyApp()),
+        );
+
+        // Crear un objeto Usuario
+        final usuario = Usuario(
+          nombre: await EncriptacionSvc().encriptar(user.user?.displayName ?? ''),
+          correo: await EncriptacionSvc().encriptar(user.user?.email ?? ''),
+        );
+
+        _usuariosTabla.crearUsuario(usuario, user.user!.uid);
+
+      } else {
+        // Mostrar un mensaje de error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('No se pudo iniciar sesión con Google')),
+        );
+      }
+    },
+    icon: Image.asset(
+      'assets/img/google.png', // Asegúrate de incluir este archivo en tus assets
+      height: 24,
+      
+    ),
+    label: Text(
+      'Iniciar sesión con Google',
+      style: TextStyle(
+        fontSize: 16,
+        color: Colors.black54,
+      ),
+    ),
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: Colors.grey), // Bordes estilo Google
+      ),
+      padding: EdgeInsets.symmetric(vertical: 12),
+    ),
+  ),
+),
+
                           SizedBox(
                             width: 200,
                             child: TextButton(

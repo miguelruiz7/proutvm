@@ -109,16 +109,6 @@ String? validarCodigoEquipo(String? value)  {
   return null; 
 }
 
-// Validar si el código de equipo es válido
-Future<bool> validarCodigoEquipoAs(String? codigo) async {
-  if (codigo == null) {
-    // Manejar el caso en el que el código es nulo
-    return false;
-  }
-
-  final existeEnFirebase = await _equiposTabla.verificarExistenciaEquipo(codigo);
-  return existeEnFirebase;
-}
 
 
 

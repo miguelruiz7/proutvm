@@ -7,7 +7,7 @@ class Usuario {
   Usuario({ 
     required this.correo, 
     required this.nombre,
-    required this.rutaImagen,
+     this.rutaImagen = '',
    /*  required this.usuario */
   });
 
@@ -27,7 +27,7 @@ class Usuario {
     return {
       'nombre': nombre,
       'correo': correo,
-      'rutaImagen': rutaImagen,
+      'rutaImagen': rutaImagen ?? '',
     /*   'usuario': usuario */
     };
   }
