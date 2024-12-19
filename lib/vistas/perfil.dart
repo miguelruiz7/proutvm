@@ -2,13 +2,11 @@ import 'package:proutvm/servicios/encriptacionSvc.dart';
 import 'package:proutvm/servicios/validadorSvc.dart';
 import 'package:proutvm/firebase/usuarios.dart';
 import 'package:proutvm/modelos/usuario.dart';
-
 import 'package:flutter/material.dart';
 import 'package:proutvm/controladores/autenticacionCtrl.dart'; 
 import 'acceso.dart'; 
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:proutvm/firebase/almacenamiento/clases.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
